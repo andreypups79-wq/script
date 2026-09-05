@@ -1,5 +1,8 @@
 -- ЕСЛИ ТЫ ЭТО ЧИТАЕШЬ ТО ТВОЯ МАТЬ СДОХЛА
 
+local EZKA_ALR = game.CoreGui:FindFirstChild("EZKA_ALR")
+if EZKA_ALR then return end
+
 local EZKA_ALR = Instance.new("BoolValue")
 EZKA_ALR.Name = "EZKA_ALR"
 EZKA_ALR.Parent = game.CoreGui
@@ -8,6 +11,8 @@ local t_gui = Instance.new("ScreenGui")
 t_gui.Name = "EZKA"
 t_gui.IgnoreGuiInset = true
 t_gui.ResetOnSpawn = false
+t_gui.Parent = game.CoreGui
+
 local tttttt = Instance.new("TextLabel")
 tttttt.Parent = t_gui
 tttttt.Size = UDim2.new(0.5, 0, 0.5, 0)
