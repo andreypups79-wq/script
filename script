@@ -15,7 +15,7 @@ t_gui.Parent = game.CoreGui
 
 local tttttt = Instance.new("TextLabel")
 tttttt.Parent = t_gui
-tttttt.Size = UDim2.new(0.5, 0, 0.5, 0)
+tttttt.Size = UDim2.new(0.7, 0, 0.2, 0)
 tttttt.Position = UDim2.new(0.5, 0, 0.5, 0)
 tttttt.AnchorPoint = Vector2.new(0.5, 0.5)
 tttttt.TextScaled = true
