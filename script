@@ -1,5 +1,7 @@
 -- ЕСЛИ ТЫ ЭТО ЧИТАЕШЬ ТО ТВОЯ МАТЬ СДОХЛА
 
+_G.CAN_EZKA = true
+
 local EZKA_ALR = game.CoreGui:FindFirstChild("EZKA_ALR")
 if EZKA_ALR then return end
 
