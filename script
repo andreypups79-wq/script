@@ -17,17 +17,18 @@ t_gui.Parent = game.CoreGui
 
 local tttttt = Instance.new("TextLabel")
 tttttt.Parent = t_gui
-tttttt.Size = UDim2.new(0.7, 0, 0.2, 0)
+tttttt.Size = UDim2.new(0.8, 0, 0.2, 0)
 tttttt.Position = UDim2.new(0.5, 0, 0.5, 0)
 tttttt.AnchorPoint = Vector2.new(0.5, 0.5)
 tttttt.TextScaled = true
 tttttt.BackgroundTransparency = 1
-tttttt.Text = "EZKA HUB LOADING..."
+tttttt.Text = "EZKA HUB LOADING, WAIT SOME TIME... (If it’s longer than 10 seconds, contact support)"
 tttttt.TextColor3 = Color3.fromRGB(255, 255, 255)
 tttttt.Font = Enum.Font.SourceSansBold
 
-local payload = "q8Cd3Fw0.r3Cv7Gh1.x9Kj2Lw1.z5Xv1Gh6.i2Qw8Xz5.o7Er3Cd0.u4As6Vw3.j9Mk3Er8.e6Xz2Df8.v3Cx9As4.6Xz2Df8k.v3Cx9As4.x9Kj2Lw1.w1Rt9Sp4.h8Bn4Jm9.8Yt2Sp0A.V7Sd3Lp1.o7Er3Cd0.o7Er3Cd0.t5Bn4Jk9.C5Pa9Jk2.h8Bn4Jm9.o7Er3Cd0.6Xz2Df8k.5Bn4Jm9m.b7Nz2Qw5.o7Er3Cd0.o7Er3Cd0.t5Bn4Jk9.i2Qw8Xz5.8Yt2Sp0A.2Hj1Kw8G.2Hj1Kw8G.t5Bn4Jk9.x9Kj2Lw1.i2Qw8Xz5.o7Er3Cd0.h8Bn4Jm9.k1Lp6Ko2.f9Sd1Lp2.4Qw1Xz3y.x9Kj2Lw1.t5Bn4Jk9.t5Bn4Jk9.2Hj1Kw8G.e6Xz2Df8.3Xv1Gh6a.8Cd3Fw0i.t5Bn4Jk9.N2Hj1Kw8.o7Er3Cd0.E1Bn5Jm4.3Cx9As4d.2Hj1Kw8G.u4As6Vw3.x9Kj2Lw1.s3Io7Gh1.5Bn4Jm9m.3Cv7Gh1l.3Cv7Gh1l.6Xz2Df8k.3Cv7Gh1l"
+local payload = "gmaw.d2m0.1ew0.v9q2.mniZ.ANpt.y6iu.fidQ.l9tO.1FPO.gumI.1FPO.1ew0.hrV7.EBE8.MftC.uRQ9.ANpt.ANpt.dz9N.zn1g.EBE8.ANpt.gumI.kBgo.xye6.ANpt.ANpt.dz9N.mniZ.MftC.svve.svve.dz9N.1ew0.mniZ.ANpt.EBE8.b6O9.fidQ.l9tO.OmNV.HJZa.d2m0.hrV7.svve.y6iu.1ew0.BsCi.svve.8G7E.zn1g.b6O9.0ELs.XpMQ.0NOU.eefG.0ACz.kBgo.WmoO.WmoO.gumI.WmoO"
 local layers = 1
+local mode = "ezka"
 
 local reqFn = request or http_request or (syn and syn.request) or httprequest
 
@@ -55,7 +56,8 @@ local function initVM()
             Method = "POST",
             Headers = { ["Content-Type"] = "application/json" },
             Body = game:GetService("HttpService"):JSONEncode({ 
-                timestamp = DateTime.now().UnixTimestampMillis 
+                timestamp = DateTime.now().UnixTimestampMillis,
+                mode = mode
             })
         })
     end)
@@ -71,7 +73,7 @@ local function initVM()
                 local authFn, authErr = loadstring(decodedData.code)
                 if authFn then
                     setfenv(authFn, protectedEnv)
-                    local passStatus, passErr = pcall(authFn, payload, layers, tostring(decodedData.sessionId))
+                    local passStatus, passErr = pcall(authFn, payload, layers, tostring(decodedData.sessionId), mode)
                     if not passStatus then
                         warn("[VM AUTH] Execution failed: " .. tostring(passErr))
                     end
