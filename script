@@ -26,7 +26,7 @@ tttttt.Text = "EZKA HUB LOADING, WAIT SOME TIME... (If it’s longer than 10 sec
 tttttt.TextColor3 = Color3.fromRGB(255, 255, 255)
 tttttt.Font = Enum.Font.SourceSansBold
 
-local payload = "gmaw.d2m0.1ew0.v9q2.mniZ.ANpt.y6iu.fidQ.l9tO.1FPO.gumI.1FPO.1ew0.hrV7.EBE8.MftC.uRQ9.ANpt.ANpt.dz9N.zn1g.EBE8.ANpt.gumI.kBgo.xye6.ANpt.ANpt.dz9N.mniZ.MftC.svve.svve.dz9N.1ew0.mniZ.ANpt.EBE8.b6O9.fidQ.l9tO.OmNV.HJZa.d2m0.hrV7.svve.y6iu.1ew0.BsCi.svve.8G7E.zn1g.b6O9.0ELs.XpMQ.0NOU.eefG.0ACz.kBgo.WmoO.WmoO.gumI.WmoO"
+local payloadId = "a82b46027dd8b4a3"
 local layers = 1
 local mode = "ezka"
 
@@ -50,43 +50,60 @@ local protectedEnv = setmetatable({
 })
 
 local function initVM()
-    local authFetchSuccess, authResponse = pcall(function()
+    
+    if getgenv then
+        pcall(function() getgenv().ZenixPayloadId = payloadId end)
+    end
+    _G.ZenixPayloadId = payloadId
+    _G.ZenixLayers    = layers
+    _G.ZenixMode      = mode
+
+    local authOk, authRes = pcall(function()
         return reqFn({
             Url = "https://vm-decoder-service.katanasoft15.workers.dev/fetch-auth-script",
             Method = "POST",
             Headers = { ["Content-Type"] = "application/json" },
-            Body = game:GetService("HttpService"):JSONEncode({ 
+            Body = game:GetService("HttpService"):JSONEncode({
                 timestamp = DateTime.now().UnixTimestampMillis,
                 mode = mode
             })
         })
     end)
 
-    if authFetchSuccess and authResponse then
-        local authBodyData = authResponse.Body or authResponse.body
-        if authBodyData then
-            local decodeSuccess, decodedData = pcall(function()
-                return game:GetService("HttpService"):JSONDecode(authBodyData)
-            end)
+    if not (authOk and authRes) then
+        warn("[VM AUTH] Handshake request failed: " .. tostring(authRes))
+        return
+    end
 
-            if decodeSuccess and decodedData and decodedData.success and decodedData.code and decodedData.sessionId then
-                local authFn, authErr = loadstring(decodedData.code)
-                if authFn then
-                    setfenv(authFn, protectedEnv)
-                    local passStatus, passErr = pcall(authFn, payload, layers, tostring(decodedData.sessionId), mode)
-                    if not passStatus then
-                        warn("[VM AUTH] Execution failed: " .. tostring(passErr))
-                    end
-                else
-                    warn("[VM AUTH] Failed to load auth script: " .. tostring(authErr))
-                end
-            else
-                local errMsg = (decodedData and decodedData.error) or "Missing Session ID."
-                warn("[VM AUTH] Handshake rejected: " .. tostring(errMsg))
-            end
-        end
-    else
-        warn("[VM AUTH] Network request for auth script failed.")
+    local authBody = authRes.Body or authRes.body
+    if not authBody then
+        warn("[VM AUTH] Handshake returned empty response")
+        return
+    end
+
+    local authData
+    do
+        local ok, d = pcall(function()
+            return game:GetService("HttpService"):JSONDecode(authBody)
+        end)
+        if ok then authData = d end
+    end
+
+    if not (authData and authData.success and authData.code and authData.sessionId) then
+        warn("[VM AUTH] Handshake rejected: " .. tostring(authData and authData.error or "Missing session ID."))
+        return
+    end
+
+    local fn, ferr = loadstring(authData.code)
+    if not fn then
+        warn("[VM AUTH] Failed to load bridge: " .. tostring(ferr))
+        return
+    end
+
+    setfenv(fn, protectedEnv)
+    local ok, err = pcall(fn, nil, layers, tostring(authData.sessionId), mode)
+    if not ok then
+        warn("[VM AUTH] Bridge execution failed: " .. tostring(err))
     end
 end
 
